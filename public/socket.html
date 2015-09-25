@@ -1,0 +1,57 @@
+<script type="text/javascript" src="js/jquery-1.11.3.min.js"></script>
+<script type="text/javascript" src="js/socket.js"></script>
+<script type="text/javascript" src="js/mqttws31.js"></script>
+
+<script type="text/javascript">
+	//Create a client instance
+	client = new Paho.MQTT.Client(
+			"ec2-54-186-38-68.us-west-2.compute.amazonaws.com", Number(8000),
+			"myclientid_" + parseInt(Math.random() * 100, 10));
+
+	// set callback handlers
+	client.onConnectionLost = onConnectionLost;
+	client.onMessageArrived = onMessageArrived;
+
+	// connect the client
+	client.connect({
+		onSuccess : onConnect
+	});
+
+	var count;
+
+	// called when the client connects
+	function onConnect() {
+		// Once a connection has been made, make a subscription and send a message.
+		console.log("onConnect");
+		client.subscribe("uavcs/mav01/imagestream");
+		message = new Paho.MQTT.Message("Hello");
+		message.destinationName = "uavcs/brower/websocket/ping1";
+		client.send(message);
+		count = 0;
+	}
+
+	// called when the client loses its connection
+	function onConnectionLost(responseObject) {
+		if (responseObject.errorCode !== 0) {
+			console.log("onConnectionLost:" + responseObject.errorMessage);
+		}
+	}
+
+	// called when a message arrives
+	function onMessageArrived(message) {
+		count++;
+		console.log("COUNT: " + count);
+		var payload = message.payloadBytes;
+		//console.log("onMessageArrived:" + payload);
+		var coordinates = [ 50, 50 ];
+		drawImage(payload, coordinates); 
+	}
+</script>
+
+
+<canvas id='thecanvas'></canvas>
+
+
+
+
+
