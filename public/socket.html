@@ -19,6 +19,9 @@
 
 	var count;
 
+	var canvas ;
+	var ctx ;
+	
 	// called when the client connects
 	function onConnect() {
 		// Once a connection has been made, make a subscription and send a message.
@@ -28,6 +31,9 @@
 		message.destinationName = "uavcs/brower/websocket/ping1";
 		client.send(message);
 		count = 0;
+		
+		 canvas = document.getElementById("thecanvas");
+		 ctx = canvas.getContext("2d");
 	}
 
 	// called when the client loses its connection
@@ -36,15 +42,17 @@
 			console.log("onConnectionLost:" + responseObject.errorMessage);
 		}
 	}
+	
 
+	
 	// called when a message arrives
 	function onMessageArrived(message) {
 		count++;
 		console.log("COUNT: " + count);
 		var payload = message.payloadBytes;
 		//console.log("onMessageArrived:" + payload);
-		var coordinates = [ 50, 50 ];
-		drawImage(payload, coordinates); 
+		var coordinates = [ 5, 5 ];
+		drawImage(payload, coordinates, ctx); 
 	}
 </script>
 

@@ -4,11 +4,9 @@
 //});
 
 
-function drawImage(imgData, coords) {
+function drawImage(imgData, coords, ctx) {
     "use strict";
-    var canvas = document.getElementById("thecanvas");
-    var ctx = canvas.getContext("2d");
-
+ 
     //var uInt8Array = new Uint8Array(imgData);
     var uInt8Array = imgData;
     var i = uInt8Array.length;
@@ -24,7 +22,7 @@ function drawImage(imgData, coords) {
     img.src = "data:image/png;base64," + base64;
     img.onload = function () {
         console.log("Image Onload");
-        ctx.drawImage(img, coords[0], coords[1], canvas.width, canvas.height);
+        ctx.drawImage(img, coords[0], coords[1], 640, 480);
     };
     img.onerror = function (stuff) {
         console.log("Img Onerror:", stuff);
