@@ -19,8 +19,8 @@
 
 	var count;
 
-	var canvas ;
-	var ctx ;
+//	var canvas ;
+//	var ctx ;
 	
 	// called when the client connects
 	function onConnect() {
@@ -32,8 +32,8 @@
 		client.send(message);
 		count = 0;
 		
-		 canvas = document.getElementById("thecanvas");
-		 ctx = canvas.getContext("2d");
+//		 canvas = document.getElementById("thecanvas");
+//		 ctx = canvas.getContext("2d");
 	}
 
 	// called when the client loses its connection
@@ -52,7 +52,7 @@
 		var payload = message.payloadBytes;
 		//console.log("onMessageArrived:" + payload);
 		var coordinates = [ 5, 5 ];
-		drawImage(payload, coordinates, ctx); 
+		drawImage(payload, coordinates); 
 	}
 </script>
 
