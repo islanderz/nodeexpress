@@ -50,7 +50,7 @@
 		count++;
 		console.log("COUNT: " + count);
 		var payload = message.payloadBytes;
-		//console.log("onMessageArrived:" + payload);
+		console.log("onMessageArrived payload length:" + payload.length);
 		var coordinates = [ 5, 5 ];
 		drawImage(payload, coordinates); 
 	}
