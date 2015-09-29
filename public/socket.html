@@ -1,3 +1,19 @@
+
+<!DOCTYPE html>
+<!--[if IE 8]>
+<html class="no-js lt-ie9" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en">
+<!--<![endif]-->
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+<title>MQTT Websocket Client</title>
+
+<link rel="stylesheet" href="stylesheets/style.css">
+ 
+<!-- Piwik -->
 <script type="text/javascript" src="js/jquery-1.11.3.min.js"></script>
 <script type="text/javascript" src="js/socket.js"></script>
 <script type="text/javascript" src="js/mqttws31.js"></script>
@@ -19,11 +35,9 @@
 
 	var count;
 
+	//	var canvas ;
+	//	var ctx ;
 
-	
-//	var canvas ;
-//	var ctx ;
-	
 	// called when the client connects
 	function onConnect() {
 		// Once a connection has been made, make a subscription and send a message.
@@ -33,24 +47,25 @@
 		message.destinationName = "uavcs/brower/websocket/ping1";
 		client.send(message);
 		count = 0;
-		
+
 		var canvas = document.getElementById("thecanvas");
-		canvas.width  = 720;
+		canvas.width = 720;
 		canvas.height = 480;
+
+		var body = $('body').addClass('connected').removeClass('notconnected').removeClass('connectionbroke');
 		
-//		 canvas = document.getElementById("thecanvas");
-//		 ctx = canvas.getContext("2d");
+		//		 canvas = document.getElementById("thecanvas");
+		//		 ctx = canvas.getContext("2d");
 	}
 
 	// called when the client loses its connection
 	function onConnectionLost(responseObject) {
+		$('body.connected').removeClass('connected').addClass('notconnected').addClass('connectionbroke');
 		if (responseObject.errorCode !== 0) {
 			console.log("onConnectionLost:" + responseObject.errorMessage);
 		}
 	}
-	
 
-	
 	// called when a message arrives
 	function onMessageArrived(message) {
 		count++;
@@ -58,14 +73,25 @@
 		var payload = message.payloadBytes;
 		console.log("onMessageArrived payload length:" + payload.length);
 		var coordinates = [ 5, 5 ];
-		drawImage(payload, coordinates); 
+		drawImage(payload, coordinates);
 	}
 </script>
 
+<!-- End Piwik Code -->
+</head>
+<body class="notconnected">
+ 
+	<div id="connection" class="row large-12 columns">
 
-<canvas id='thecanvas'></canvas>
+		<div class="large-8 columns conniTop">
+			<h3>Connection</h3>
+		</div>
 
+		<div class="large-1 columns conniStatus">
+			<div id="connectionStatus"></div>
+		</div>
+	</div>
 
-
-
-
+	<canvas id='thecanvas'></canvas>
+</body>
+</html>
