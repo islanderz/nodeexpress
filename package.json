@@ -9,6 +9,9 @@
     "express": "3.2.6",
     "jade": "*",
     "mqtt": "1.4.0",
-    "socket.io":"1.3.6"
+    "socket.io": "1.3.6"
+  },
+  "devDependencies": {
+    "grunt": "0.4.5"
   }
 }

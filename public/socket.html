@@ -12,7 +12,7 @@
 <title>MQTT Websocket Client</title>
 
 <link rel="stylesheet" href="stylesheets/style.css">
- 
+
 <!-- Piwik -->
 <script type="text/javascript" src="js/jquery-1.11.3.min.js"></script>
 <script type="text/javascript" src="js/socket.js"></script>
@@ -43,6 +43,7 @@
 		// Once a connection has been made, make a subscription and send a message.
 		console.log("onConnect");
 		client.subscribe("uavcs/mav01/imagestream");
+		client.subscribe("uavcs/mav01/attitude");
 		message = new Paho.MQTT.Message("Hello");
 		message.destinationName = "uavcs/brower/websocket/ping1";
 		client.send(message);
@@ -52,35 +53,52 @@
 		canvas.width = 720;
 		canvas.height = 480;
 
-		var body = $('body').addClass('connected').removeClass('notconnected').removeClass('connectionbroke');
-		
+		var body = $('body').addClass('connected').removeClass('notconnected')
+				.removeClass('connectionbroke');
+
 		//		 canvas = document.getElementById("thecanvas");
 		//		 ctx = canvas.getContext("2d");
 	}
 
 	// called when the client loses its connection
 	function onConnectionLost(responseObject) {
-		$('body.connected').removeClass('connected').addClass('notconnected').addClass('connectionbroke');
+		$('body.connected').removeClass('connected').addClass('notconnected')
+				.addClass('connectionbroke');
 		if (responseObject.errorCode !== 0) {
 			console.log("onConnectionLost:" + responseObject.errorMessage);
 		}
 	}
 
+	function endsWith(str, suffix) {
+		return str.indexOf(suffix, str.length - suffix.length) !== -1;
+	}
+
 	// called when a message arrives
 	function onMessageArrived(message) {
-		count++;
-		console.log("COUNT: " + count);
-		var payload = message.payloadBytes;
-		console.log("onMessageArrived payload length:" + payload.length);
-		var coordinates = [ 5, 5 ];
-		drawImage(payload, coordinates);
+
+		if (endsWith(message.destinationName, "attitude")) {
+
+			console.log(message.payloadString);
+			var obj = JSON.parse(message.payloadString);
+			document.getElementById("x").innerHTML = obj.x;
+			document.getElementById("y").innerHTML = obj.y;
+			document.getElementById("z").innerHTML = obj.z;
+		} else {
+			count++;
+			console.log("COUNT: " + count);
+			var payload = message.payloadBytes;
+			console.log("onMessageArrived payload length:" + payload.length);
+			var coordinates = [ 20, 5 ];
+			drawImage(payload, coordinates);
+		}
+
 	}
 </script>
 
 <!-- End Piwik Code -->
 </head>
 <body class="notconnected">
- 
+
 	<div id="connection" class="row large-12 columns">
 
 		<div class="large-8 columns conniTop">
@@ -92,6 +110,31 @@
 		</div>
 	</div>
 
+
 	<canvas id='thecanvas'></canvas>
+
+	<div class="panel panel-default">
+		<div class="panel-heading">Attitude</div>
+		<br/>
+		<div class="panel-body" id="subscribeCollapse">
+
+			<form class="form-horizontal">
+
+				<div class="form-group">
+					<span id="x">0 </span>
+				</div>
+				<div class="form-group">
+					<span id="y">0 </span>
+				</div>
+				<div class="form-group">
+					<span id="z">0 </span>
+				</div>
+			</form>
+		</div>
+	</div>
+
+
+
+
 </body>
 </html>
