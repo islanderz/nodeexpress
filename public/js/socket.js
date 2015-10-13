@@ -4,8 +4,8 @@
 
 function drawImage(imgData, coords) {
 	"use strict";
-//	var canvasImage = document.getElementById("thecanvas");
-//	var ctx = canvasImage.getContext("2d");
+	var canvasImage = document.getElementById("thecanvas");
+	var ctx = canvasImage.getContext("2d");
 
 	// var uInt8Array = new Uint8Array(imgData);
 	var uInt8Array = imgData;
@@ -21,10 +21,10 @@ function drawImage(imgData, coords) {
 	var img = new Image();
 	img.src = "data:image/png;base64," + base64;
 	img.onload = function() {
-//		console.log("Image Onload");
-//		ctx.drawImage(img, coords[0], coords[1], canvasImage.width,
-//				canvasImage.height);
-		return img;
+		console.log("Image Onload");
+		ctx.drawImage(img, coords[0], coords[1], canvasImage.width,
+				canvasImage.height);
+//		return img;
 	};
 	img.onerror = function(stuff) {
 		console.log("Image error:", stuff);

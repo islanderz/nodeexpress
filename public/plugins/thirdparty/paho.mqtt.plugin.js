@@ -106,12 +106,17 @@
 			 
 			if (endsWith(message.destinationName, "attitude")) {
 				obj = JSON.parse(message.payloadString);
-				if (!data.attitude) {
-					data.attitude = {};
-				} 
-				data.attitude.x = obj.x;
-				data.attitude.y = obj.y;
-				data.attitude.z = obj.z; 
+//				if (!data.attitude) {
+//					data.attitude = {};
+//				} 
+//				data.attitude.x = obj.x;
+//				data.attitude.y = obj.y;
+//				data.attitude.z = obj.z; 
+				
+				document.getElementById("x").innerHTML = obj.x;
+				document.getElementById("y").innerHTML = obj.y;
+				document.getElementById("z").innerHTML = obj.z;
+				
 			} else if (endsWith(message.destinationName, "battery")) { 
 				obj = JSON.parse(message.payloadString);
 				console.log(message.payloadString);
@@ -120,12 +125,20 @@
 				}  
 				data.battery = obj.battery; 
 			} else if (endsWith(message.destinationName, "imagestream")) {
+//				count++;
+//				console.log("Image COUNT: " + count);
+//				var payload = message.payloadBytes;
+//				console.log("Image payload length:" + payload.length);
+//				var coordinates = [ 20, 5 ];
+//				data.image = drawImage(payload, coordinates);
+				
 				count++;
-				console.log("Image COUNT: " + count);
+				console.log("COUNT: " + count);
 				var payload = message.payloadBytes;
-				console.log("Image payload length:" + payload.length);
-				var coordinates = [ 20, 5 ];
-				data.image = drawImage(payload, coordinates);
+				console.log("onMessageArrived payload length:" + payload.length);
+				var coordinates = [ 8, 3 ];
+				drawImage(payload, coordinates);
+				
 			}
 			
 			updateCallback(data);
