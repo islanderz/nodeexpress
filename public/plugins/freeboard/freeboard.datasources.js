@@ -1,11 +1,11 @@
-// ┌────────────────────────────────────────────────────────────────────┐ \\
-// │ F R E E B O A R D                                                  │ \\
-// ├────────────────────────────────────────────────────────────────────┤ \\
-// │ Copyright © 2013 Jim Heising (https://github.com/jheising)         │ \\
-// │ Copyright © 2013 Bug Labs, Inc. (http://buglabs.net)               │ \\
-// ├────────────────────────────────────────────────────────────────────┤ \\
-// │ Licensed under the MIT license.                                    │ \\
-// └────────────────────────────────────────────────────────────────────┘ \\
+// â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”� \\
+// â”‚ F R E E B O A R D                                                  â”‚ \\
+// â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤ \\
+// â”‚ Copyright Â© 2013 Jim Heising (https://github.com/jheising)         â”‚ \\
+// â”‚ Copyright Â© 2013 Bug Labs, Inc. (http://buglabs.net)               â”‚ \\
+// â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤ \\
+// â”‚ Licensed under the MIT license.                                    â”‚ \\
+// â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜ \\
 
 (function () {
 	var jsonDatasource = function (settings, updateCallback) {
@@ -196,14 +196,31 @@
 		}
 
 		updateRefresh(currentSettings.refresh * 1000);
-
-		this.updateNow = function () {
+		
+		var lat;
+		var lon; 
+	  
+	     
+		  var startPos;
+		  var geoSuccess = function(position) {
+		    startPos = position;
+		//	    	    document.getElementById('startLat').innerHTML = startPos.coords.latitude;
+		//	    	    document.getElementById('startLon').innerHTML = startPos.coords.longitude;
+		    lat=startPos.coords.latitude;
+		    lon=startPos.coords.longitude;
+		  };
+		  navigator.geolocation.getCurrentPosition(geoSuccess);
+		 
+		
+			this.updateNow = function () {
 			$.ajax({
-				url: "http://api.openweathermap.org/data/2.5/weather?q=" + encodeURIComponent(currentSettings.location) + "&units=" + currentSettings.units,
+				url: "http://api.openweathermap.org/data/2.5/weather?lat="  + lat + "&lon=" + lon + "&units=" + currentSettings.units +"&APPID=e6a0efb15f431d92cbe323f638aa3727",
 				dataType: "JSONP",
 				success: function (data) {
 					// Rejigger our data into something easier to understand
 					var newData = {
+						lattitude:lat,
+						longitude:lon,
 						place_name: data.name,
 						sunrise: (new Date(data.sys.sunrise * 1000)).toLocaleTimeString(),
 						sunset: (new Date(data.sys.sunset * 1000)).toLocaleTimeString(),

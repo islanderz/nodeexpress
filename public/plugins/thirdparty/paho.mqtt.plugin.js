@@ -10,6 +10,7 @@
 		"display_name": "Paho MQTT",
         "description" : "Receive data from an MQTT server.",
 		"external_scripts" : [
+//			"http://localhost:3000/js/mqttws31.js", "http://localhost:3000/js/socket.js"
 			"http://unmand.io:3000/js/mqttws31.js", "http://unmand.io:3000/js/socket.js"
 		],
 		"settings"    : [
@@ -124,6 +125,13 @@
 					data.battery = 0;
 				}  
 				data.battery = obj.battery; 
+			} else if (endsWith(message.destinationName, "velocity")) {
+				obj = JSON.parse(message.payloadString);
+ 
+				document.getElementById("vx").innerHTML = obj.xvel;
+				document.getElementById("vy").innerHTML = obj.yvel;
+				document.getElementById("vz").innerHTML = obj.zvel;
+				
 			} else if (endsWith(message.destinationName, "imagestream")) {
 //				count++;
 //				console.log("Image COUNT: " + count);

@@ -14,7 +14,7 @@
 		var currentSettings = settings;
 		var errorStage = 0; 	// 0 = try standard request
 		// 1 = try JSONP
-		// 2 = try mavproxy.freeboard.io
+		// 2 = try thingproxy.freeboard.io
 		var lockErrorStage = false;
 
 		function updateRefresh(refreshTime) {
@@ -30,15 +30,15 @@
 		updateRefresh(currentSettings.refresh * 1000);
 
 		this.updateNow = function () {
-			if ((errorStage > 1 && !currentSettings.use_mavproxy) || errorStage > 2) // We've tried everymav, let's quit
+			if ((errorStage > 1 && !currentSettings.use_thingproxy) || errorStage > 2) // We've tried everything, let's quit
 			{
 				return; // TODO: Report an error
 			}
 
 			var requestURL = currentSettings.url;
 
-			if (errorStage == 2 && currentSettings.use_mavproxy) {
-				requestURL = (location.protocol == "https:" ? "https:" : "http:") + "//mavproxy.freeboard.io/fetch/" + encodeURI(currentSettings.url);
+			if (errorStage == 2 && currentSettings.use_thingproxy) {
+				requestURL = (location.protocol == "https:" ? "https:" : "http:") + "//thingproxy.freeboard.io/fetch/" + encodeURI(currentSettings.url);
 			}
 
 			var body = currentSettings.body;
@@ -109,9 +109,9 @@
 				type: "text"
 			},
 			{
-				name: "use_mavproxy",
-				display_name: "Try mavproxy",
-				description: 'A direct JSON connection will be tried first, if that fails, a JSONP connection will be tried. If that fails, you can use mavproxy, which can solve many connection problems to APIs. <a href="https://github.com/Freeboard/mavproxy" target="_blank">More information</a>.',
+				name: "use_thingproxy",
+				display_name: "Try thingproxy",
+				description: 'A direct JSON connection will be tried first, if that fails, a JSONP connection will be tried. If that fails, you can use thingproxy, which can solve many connection problems to APIs. <a href="https://github.com/Freeboard/thingproxy" target="_blank">More information</a>.',
 				type: "boolean",
 				default_value: true
 			},
@@ -196,14 +196,31 @@
 		}
 
 		updateRefresh(currentSettings.refresh * 1000);
-
-		this.updateNow = function () {
+		
+		var lat;
+		var lon; 
+	  
+	     
+		  var startPos;
+		  var geoSuccess = function(position) {
+		    startPos = position;
+		//	    	    document.getElementById('startLat').innerHTML = startPos.coords.latitude;
+		//	    	    document.getElementById('startLon').innerHTML = startPos.coords.longitude;
+		    lat=startPos.coords.latitude;
+		    lon=startPos.coords.longitude;
+		  };
+		  navigator.geolocation.getCurrentPosition(geoSuccess);
+		 
+		
+			this.updateNow = function () {
 			$.ajax({
-				url: "http://api.openweathermap.org/data/2.5/weather?q=" + encodeURIComponent(currentSettings.location) + "&units=" + currentSettings.units,
+				url: "http://api.openweathermap.org/data/2.5/weather?lat="  + lat + "&lon=" + lon + "&units=" + currentSettings.units +"&APPID=e6a0efb15f431d92cbe323f638aa3727",
 				dataType: "JSONP",
 				success: function (data) {
-					// Rejigger our data into somemav easier to understand
+					// Rejigger our data into something easier to understand
 					var newData = {
+						lattitude:lat,
+						longitude:lon,
 						place_name: data.name,
 						sunrise: (new Date(data.sys.sunrise * 1000)).toLocaleTimeString(),
 						sunset: (new Date(data.sys.sunset * 1000)).toLocaleTimeString(),
@@ -284,7 +301,7 @@
 		}
 
 		this.updateNow = function () {
-			dweetio.get_latest_dweet_for(currentSettings.mav_id, function (err, dweet) {
+			dweetio.get_latest_dweet_for(currentSettings.thing_id, function (err, dweet) {
 				if (err) {
 					//onNewDweet({});
 				}
@@ -303,7 +320,7 @@
 
 			currentSettings = newSettings;
 
-			dweetio.listen_for(currentSettings.mav_id, function (dweet) {
+			dweetio.listen_for(currentSettings.thing_id, function (dweet) {
 				onNewDweet(dweet.content);
 			});
 		}
@@ -312,15 +329,15 @@
 	};
 
 	freeboard.loadDatasourcePlugin({
-		"type_name": "unmand_io",
-		"display_name": "Unmand.io",
+		"type_name": "dweet_io",
+		"display_name": "Dweet.io",
 		"external_scripts": [
-			"http://localhost:3000/js/unmands.io.js"
+			"http://dweet.io/client/dweet.io.min.js"
 		],
 		"settings": [
 			{
-				name: "mav_id",
-				display_name: "Mav Name",
+				name: "thing_id",
+				display_name: "Thing Name",
 				"description": "Example: salty-dog-1",
 				type: "text"
 			}
@@ -632,28 +649,28 @@ freeboard.loadDatasourcePlugin({
 			getData();
 		}
 
-		// **onDispose()** (required) : A public function we must implement that will be called when this instance of this plugin is no longer needed. Do anymav you need to cleanup after yourself here.
+		// **onDispose()** (required) : A public function we must implement that will be called when this instance of this plugin is no longer needed. Do anything you need to cleanup after yourself here.
 		self.onDispose = function()
 		{
 		
 			//conn.close();
 		}
 
-		// Here we call createRefreshTimer with our current settings, to kick mavs off, initially. Notice how we make use of one of the user defined settings that we setup earlier.
+		// Here we call createRefreshTimer with our current settings, to kick things off, initially. Notice how we make use of one of the user defined settings that we setup earlier.
 	//	createRefreshTimer(currentSettings.refresh_time);
 	}
 
 
 }());
 
-// â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”� \\
-// â”‚ F R E E B O A R D                                                  â”‚ \\
-// â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤ \\
-// â”‚ Copyright Â© 2013 Jim Heising (https://github.com/jheising)         â”‚ \\
-// â”‚ Copyright Â© 2013 Bug Labs, Inc. (http://buglabs.net)               â”‚ \\
-// â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤ \\
-// â”‚ Licensed under the MIT license.                                    â”‚ \\
-// â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜ \\
+// ┌────────────────────────────────────────────────────────────────────┐ \\
+// │ F R E E B O A R D                                                  │ \\
+// ├────────────────────────────────────────────────────────────────────┤ \\
+// │ Copyright © 2013 Jim Heising (https://github.com/jheising)         │ \\
+// │ Copyright © 2013 Bug Labs, Inc. (http://buglabs.net)               │ \\
+// ├────────────────────────────────────────────────────────────────────┤ \\
+// │ Licensed under the MIT license.                                    │ \\
+// └────────────────────────────────────────────────────────────────────┘ \\
 
 (function () {
 	var SPARKLINE_HISTORY_LENGTH = 100;
@@ -1403,7 +1420,7 @@ freeboard.loadDatasourcePlugin({
         var isOn = false;
         var onText;
         var offText;
-        
+
         function updateState() {
             indicatorElement.toggleClass("on", isOn);
 
@@ -1434,7 +1451,7 @@ freeboard.loadDatasourcePlugin({
             }
             if (settingName == "off_text") {
                 offText = newValue;
-            }            
+            }
 
             updateState();
         }
@@ -1453,26 +1470,26 @@ freeboard.loadDatasourcePlugin({
         type_name: "indicator",
         display_name: "Indicator Light",
         settings: [
-            {
-                name: "title",
-                display_name: "Title",
-                type: "text"
-            },
-            {
-                name: "value",
-                display_name: "Value",
-                type: "calculated"
-            },
-            {
-                name: "on_text",
-                display_name: "On Text",
-                type: "calculated"
-            },
-            {
-                name: "off_text",
-                display_name: "Off Text",
-                type: "calculated"
-            }
+	        {
+	            name: "title",
+	            display_name: "Title",
+	            type: "text"
+	        },
+	        {
+	            name: "value",
+	            display_name: "Value",
+	            type: "calculated"
+	        },
+	        {
+	            name: "on_text",
+	            display_name: "On Text",
+	            type: "calculated"
+	        },
+	        {
+	            name: "off_text",
+	            display_name: "Off Text",
+	            type: "calculated"
+	        }
         ],
         newInstance: function (settings, newInstanceCallback) {
             newInstanceCallback(new indicatorWidget(settings));
