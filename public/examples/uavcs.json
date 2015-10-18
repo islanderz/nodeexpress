@@ -367,7 +367,7 @@
       }
     },
     {
-      "name": "unmandbatt",
+      "name": "unmandbat",
       "type": "paho_mqtt",
       "settings": {
         "server": "unmand.io",
@@ -378,7 +378,7 @@
         "password": "",
         "topic": "uavcs\/+\/+\/navdata\/battery",
         "json_data": true,
-        "name": "unmandbatt"
+        "name": "unmandbat"
       }
     },
      {
