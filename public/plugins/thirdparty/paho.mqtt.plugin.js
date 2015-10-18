@@ -10,8 +10,8 @@
 		"display_name": "Paho MQTT",
         "description" : "Receive data from an MQTT server.",
 		"external_scripts" : [
-			"http://localhost:3000/js/mqttws31.js", "http://localhost:3000/js/socket.js"
-//			"http://unmand.io:3000/js/mqttws31.js", "http://unmand.io:3000/js/socket.js"
+//			"http://localhost:3000/js/mqttws31.js", "http://localhost:3000/js/socket.js"
+			"http://unmand.io:3000/js/mqttws31.js", "http://unmand.io:3000/js/socket.js"
 		],
 		"settings"    : [
 			{
