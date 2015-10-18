@@ -100,6 +100,9 @@
 
 		var obj;
 		var count = 0;
+		var countalt = 0;
+		var countatt = 0;
+		var countbat = 0;
 		
 		function onMessageArrived(message) {
 			data.topic = message.destinationName;
@@ -113,7 +116,7 @@
 //				data.image = drawImage(payload, coordinates);
 				
 				count++;
-				console.log("COUNT: " + count);
+				console.log("COUNT Images: " + count);
 				var payload = message.payloadBytes;
 //				console.log("onMessageArrived payload length:" + payload.length);
 				var coordinates = [ 8, 3 ];
@@ -123,17 +126,23 @@
 				obj = JSON.parse(message.payloadString);
 				
 				if (obj.altitude) {
+					countalt++;
 					data.altitude = obj.altitude; 
+					console.log("COUNT Altitude: " + countalt);
 				} else if (obj.x){
+					countatt++
 					document.getElementById("x").innerHTML = obj.x;
 					document.getElementById("y").innerHTML = obj.y;
 					document.getElementById("z").innerHTML = obj.z;
+					console.log("COUNT Attitude: " + countatt);
 				} else if (obj.battery){
+					countbat++;
 					data.battery = obj.battery;
-				} else if (obj.xvel){
+					console.log("COUNT Battery: " + countbat);
+				} else if (obj.xvel){ 
 					document.getElementById("vx").innerHTML = obj.xvel;
 					document.getElementById("vy").innerHTML = obj.yvel;
-					document.getElementById("vz").innerHTML = obj.zvel;
+					document.getElementById("vz").innerHTML = obj.zvel; 
 				} 
 			}
 			
