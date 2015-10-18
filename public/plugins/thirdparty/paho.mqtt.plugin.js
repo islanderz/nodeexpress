@@ -10,8 +10,8 @@
 		"display_name": "Paho MQTT",
         "description" : "Receive data from an MQTT server.",
 		"external_scripts" : [
-//			"http://localhost:3000/js/mqttws31.js", "http://localhost:3000/js/socket.js"
-			"http://unmand.io:3000/js/mqttws31.js", "http://unmand.io:3000/js/socket.js"
+			"http://localhost:3000/js/mqttws31.js", "http://localhost:3000/js/socket.js"
+//			"http://unmand.io:3000/js/mqttws31.js", "http://unmand.io:3000/js/socket.js"
 		],
 		"settings"    : [
 			{
@@ -104,35 +104,7 @@
 		function onMessageArrived(message) {
 			data.topic = message.destinationName;
  
-			 
-			if (endsWith(message.destinationName, "attitude")) {
-				obj = JSON.parse(message.payloadString);
-//				if (!data.attitude) {
-//					data.attitude = {};
-//				} 
-//				data.attitude.x = obj.x;
-//				data.attitude.y = obj.y;
-//				data.attitude.z = obj.z; 
-				
-				document.getElementById("x").innerHTML = obj.x;
-				document.getElementById("y").innerHTML = obj.y;
-				document.getElementById("z").innerHTML = obj.z;
-				
-			} else if (endsWith(message.destinationName, "battery")) { 
-				obj = JSON.parse(message.payloadString);
-				console.log(message.payloadString);
-				if (!data.battery) {
-					data.battery = 0;
-				}  
-				data.battery = obj.battery; 
-			} else if (endsWith(message.destinationName, "velocity")) {
-				obj = JSON.parse(message.payloadString);
- 
-				document.getElementById("vx").innerHTML = obj.xvel;
-				document.getElementById("vy").innerHTML = obj.yvel;
-				document.getElementById("vz").innerHTML = obj.zvel;
-				
-			} else if (endsWith(message.destinationName, "imagestream")) {
+			if (endsWith(message.destinationName, "imagestream")) {
 //				count++;
 //				console.log("Image COUNT: " + count);
 //				var payload = message.payloadBytes;
@@ -143,11 +115,58 @@
 				count++;
 				console.log("COUNT: " + count);
 				var payload = message.payloadBytes;
-				console.log("onMessageArrived payload length:" + payload.length);
+//				console.log("onMessageArrived payload length:" + payload.length);
 				var coordinates = [ 8, 3 ];
 				drawImage(payload, coordinates);
 				
+			} else {
+				obj = JSON.parse(message.payloadString);
+				
+				if (obj.altitude) {
+					data.altitude = obj.altitude; 
+				} else if (obj.x){
+					document.getElementById("x").innerHTML = obj.x;
+					document.getElementById("y").innerHTML = obj.y;
+					document.getElementById("z").innerHTML = obj.z;
+				} else if (obj.battery){
+					data.battery = obj.battery;
+				} else if (obj.xvel){
+					document.getElementById("vx").innerHTML = obj.xvel;
+					document.getElementById("vy").innerHTML = obj.yvel;
+					document.getElementById("vz").innerHTML = obj.zvel;
+				} 
 			}
+			
+//			if (endsWith(message.destinationName, "altitude")) {
+//				obj = JSON.parse(message.payloadString);
+//				//console.log(message.payloadString);
+//				if (!data.altitude) {
+//					data.altitude = 0;
+//				}  
+//				data.altitude = obj.altitude; 
+//				
+//			} else if (endsWith(message.destinationName, "attitude")) {
+//				obj = JSON.parse(message.payloadString);
+// 	
+//				document.getElementById("x").innerHTML = obj.x;
+//				document.getElementById("y").innerHTML = obj.y;
+//				document.getElementById("z").innerHTML = obj.z;
+//				
+//			} else if (endsWith(message.destinationName, "battery")) { 
+//				obj = JSON.parse(message.payloadString);
+////				console.log(message.payloadString);
+//				if (!data.battery) {
+//					data.battery = 0;
+//				}  
+//				data.battery = obj.battery; 
+//			} else if (endsWith(message.destinationName, "velocity")) {
+//				obj = JSON.parse(message.payloadString);
+// 
+//				document.getElementById("vx").innerHTML = obj.xvel;
+//				document.getElementById("vy").innerHTML = obj.yvel;
+//				document.getElementById("vz").innerHTML = obj.zvel;
+//				
+//			} 
 			
 			updateCallback(data);
 		};
