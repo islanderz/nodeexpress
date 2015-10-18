@@ -90,7 +90,7 @@
           "settings": {
             "title": "Altitude",
             "size": "regular",
-            "value": "datasources[\"unmand\"][\"altitude\"]",
+            "value": "datasources[\"unmandalt\"][\"altitude\"]",
             "sparkline": true,
             "animate": true,
             "units": ""
@@ -114,7 +114,7 @@
           "type": "gauge",
           "settings": {
             "title": "Battery",
-            "value": "datasources[\"unmand\"][\"battery\"]",
+            "value": "datasources[\"unmandbat\"][\"battery\"]",
             "units": "%",
             "min_value": "0",
             "max_value": "100"
@@ -337,7 +337,7 @@
       }
     },
     {
-      "name": "unmand",
+      "name": "unmandatt",
       "type": "paho_mqtt",
       "settings": {
         "server": "unmand.io",
@@ -346,9 +346,54 @@
         "client_id": "browser_cli_112",
         "username": "",
         "password": "",
-        "topic": "uavcs\/+\/+\/navdata\/#",
+        "topic": "uavcs\/+\/+\/navdata\/attitude",
         "json_data": true,
-        "name": "unmand"
+        "name": "unmandatt"
+      }
+    },  
+    {
+      "name": "unmandalt",
+      "type": "paho_mqtt",
+      "settings": {
+        "server": "unmand.io",
+        "port": 8000,
+        "use_ssl": false,
+        "client_id": "browser_cli_113",
+        "username": "",
+        "password": "",
+        "topic": "uavcs\/+\/+\/navdata\/altitude",
+        "json_data": true,
+        "name": "unmandalt"
+      }
+    },
+    {
+      "name": "unmandbatt",
+      "type": "paho_mqtt",
+      "settings": {
+        "server": "unmand.io",
+        "port": 8000,
+        "use_ssl": false,
+        "client_id": "browser_cli_114",
+        "username": "",
+        "password": "",
+        "topic": "uavcs\/+\/+\/navdata\/battery",
+        "json_data": true,
+        "name": "unmandbatt"
+      }
+    },
+     {
+      "name": "unmandvel",
+      "type": "paho_mqtt",
+      "settings": {
+        "server": "unmand.io",
+        "port": 8000,
+        "use_ssl": false,
+        "client_id": "browser_cli_115",
+        "username": "",
+        "password": "",
+        "topic": "uavcs\/+\/+\/navdata\/velocity",
+        "json_data": true,
+        "name": "unmandvel"
       }
     },
     {
