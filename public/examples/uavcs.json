@@ -326,7 +326,7 @@
       "type": "paho_mqtt",
       "settings": {
         "server": "unmand.io",
-        "port": 1883,
+        "port": 8000,
         "use_ssl": false,
         "client_id": "browser_cli_111",
         "username": "",
@@ -341,7 +341,7 @@
       "type": "paho_mqtt",
       "settings": {
         "server": "unmand.io",
-        "port": 1883,
+        "port": 8000,
         "use_ssl": false,
         "client_id": "browser_cli_112",
         "username": "",
@@ -356,7 +356,7 @@
       "type": "paho_mqtt",
       "settings": {
         "server": "unmand.io",
-        "port": 1883,
+        "port": 8000,
         "use_ssl": false,
         "client_id": "browser_cli_113",
         "username": "",
@@ -371,7 +371,7 @@
       "type": "paho_mqtt",
       "settings": {
         "server": "unmand.io",
-        "port": 1883,
+        "port": 8000,
         "use_ssl": false,
         "client_id": "browser_cli_114",
         "username": "",
@@ -386,7 +386,7 @@
       "type": "paho_mqtt",
       "settings": {
         "server": "unmand.io",
-        "port": 1883,
+        "port": 8000,
         "use_ssl": false,
         "client_id": "browser_cli_115",
         "username": "",
